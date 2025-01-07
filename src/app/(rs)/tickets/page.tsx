@@ -29,7 +29,7 @@ export default async function Tickets({
     return (
         <>
             <TicketSearch />
-            {results.length ? <TicketTable data={results} /> : <p className="mt-4">No result found</p>}
+            {results.length ? <TicketTable data={results} /> : <p className="mt-4">No results found</p>}
         </>
     )
 }
