@@ -19,27 +19,22 @@ import { useToast } from '@/hooks/use-toast'
 import { LoaderCircle } from 'lucide-react'
 import { DisplayServerActionResponse } from "@/components/DisplayServerActionResponse"
 
-
-
 type Props = {
     customer: selectCustomerSchemaType,
     ticket?: selectTicketSchemaType,
     techs?: {
-        id:string
-        description:string
-    } [],
+        id: string,
+        description: string,
+    }[],
     isEditable?: boolean,
+    isManager?: boolean | undefined
 }
 
 export default function TicketForm({
-    customer, ticket, techs, isEditable = true
+    customer, ticket, techs, isEditable = true, isManager = false
 }: Props) {
 
-    const isManager = Array.isArray(techs)
     const { toast } = useToast()
-
-
-
 
     const defaultValues: insertTicketSchemaType = {
         id: ticket?.id ?? "(New)",
@@ -47,7 +42,7 @@ export default function TicketForm({
         title: ticket?.title ?? '',
         description: ticket?.description ?? '',
         completed: ticket?.completed ?? false,
-        tech: ticket?.tech ?? 'new-ticket@example.com',
+        tech: ticket?.tech.toLowerCase() ?? 'new-ticket@example.com',
     }
 
     const form = useForm<insertTicketSchemaType>({
@@ -81,13 +76,12 @@ export default function TicketForm({
     })
 
     async function submitForm(data: insertTicketSchemaType) {
-        //console.log(data)
         executeSave(data)
     }
 
     return (
         <div className="flex flex-col gap-1 sm:px-8">
-            <DisplayServerActionResponse result={saveResult}/>
+            <DisplayServerActionResponse result={saveResult} />
             <div>
                 <h2 className="text-2xl font-bold">
                     {ticket?.id && isEditable
@@ -109,10 +103,10 @@ export default function TicketForm({
                         <InputWithLabel<insertTicketSchemaType>
                             fieldTitle="Title"
                             nameInSchema="title"
-                            disabled = {!isEditable}
+                            disabled={!isEditable}
                         />
 
-                        {isManager ? (
+                        {isManager && techs ? (
                             <SelectWithLabel<insertTicketSchemaType>
                                 fieldTitle="Tech ID"
                                 nameInSchema="tech"
@@ -126,8 +120,7 @@ export default function TicketForm({
                             />
                         )}
 
-
-                       {ticket?.id ? (
+                        {ticket?.id ? (
                             <CheckboxWithLabel<insertTicketSchemaType>
                                 fieldTitle="Completed"
                                 nameInSchema="completed"
@@ -158,34 +151,35 @@ export default function TicketForm({
                             className="h-96"
                             disabled={!isEditable}
                         />
-                       {isEditable ? (
-                        <div className="flex gap-2">
-                            <Button
-                                type="submit"
-                                className="w-3/4"
-                                variant="default"
-                                title="Save"
-                                disabled={isSaving}
-                            >
-                               {isSaving ? (
+
+                        {isEditable ? (
+                            <div className="flex gap-2">
+                                <Button
+                                    type="submit"
+                                    className="w-3/4"
+                                    variant="default"
+                                    title="Save"
+                                    disabled={isSaving}
+                                >
+                                    {isSaving ? (
                                         <>
                                             <LoaderCircle className="animate-spin" /> Saving
                                         </>
                                     ) : "Save"}
-                            </Button>
+                                </Button>
 
-                            <Button
-                                type="button"
-                                variant="destructive"
-                                title="Reset"
-                                onClick={() => {
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    title="Reset"
+                                    onClick={() => {
                                         form.reset(defaultValues)
                                         resetSaveAction()
                                     }}
-                            >
-                                Reset
-                            </Button>
-                        </div>
+                                >
+                                    Reset
+                                </Button>
+                            </div>
                         ) : null}
 
                     </div>
