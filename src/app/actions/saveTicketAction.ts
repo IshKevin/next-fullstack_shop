@@ -31,7 +31,7 @@ export const saveTicketAction = actionClient
         // createdAt and updatedAt are set by the database
         if (ticket.id === '(New)') {
             const result = await db.insert(tickets).values({
-                customerId: ticket.customerId,
+                customerId: Number(ticket.customerId),
                 title: ticket.title,
                 description: ticket.description,
                 tech: ticket.tech,
@@ -44,10 +44,10 @@ export const saveTicketAction = actionClient
         // updatedAt is set by the database
         const result = await db.update(tickets)
             .set({
-                customerId: ticket.customerId,
+                customerId: Number(ticket.customerId),
                 title: ticket.title,
                 description: ticket.description,
-                completed: ticket.completed,
+                completed: Boolean(ticket.completed),
                 tech: ticket.tech,
             })
             .where(eq(tickets.id, ticket.id!))

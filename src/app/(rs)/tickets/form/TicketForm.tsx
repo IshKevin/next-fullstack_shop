@@ -41,8 +41,10 @@ export default function TicketForm({
         customerId: ticket?.customerId ?? customer.id,
         title: ticket?.title ?? '',
         description: ticket?.description ?? '',
-        completed: ticket?.completed ?? false,
+        completed: (ticket?.completed ?? false).toString(),
         tech: ticket?.tech.toLowerCase() ?? 'new-ticket@example.com',
+        createdAt: "",
+        updatedAt: ""
     }
 
     const form = useForm<insertTicketSchemaType>({
@@ -66,7 +68,7 @@ export default function TicketForm({
                 })
             }
         },
-        onError({ error }) {
+        onError() {
             toast({
                 variant: "destructive",
                 title: "Error",

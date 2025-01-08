@@ -1,11 +1,15 @@
-import { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+
 type Props = {
-    icon: string,
+
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
+
     label: string,
+
     href?: string,
+
 }
 
 
